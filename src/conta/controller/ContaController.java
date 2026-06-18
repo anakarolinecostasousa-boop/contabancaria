@@ -39,7 +39,10 @@ public class ContaController implements ContaRepository {
 
 		listaContas.add(conta);
 
-		System.out.println("\nA Conta número " + conta.getNumero() + " foi criada com sucesso!");
+		System.out.println(
+				"\nA Conta número " +
+				conta.getNumero() +
+				" foi criada com sucesso!");
 	}
 
 	@Override
@@ -49,13 +52,21 @@ public class ContaController implements ContaRepository {
 
 		if (buscaConta != null) {
 
-			listaContas.set(listaContas.indexOf(buscaConta), conta);
+			listaContas.set(
+					listaContas.indexOf(buscaConta),
+					conta);
 
-			System.out.println("\nA Conta número " + conta.getNumero() + " foi atualizada com sucesso!");
+			System.out.println(
+					"\nA Conta número " +
+					conta.getNumero() +
+					" foi atualizada com sucesso!");
 
 		} else {
 
-			System.out.println("\nA Conta número " + conta.getNumero() + " não foi encontrada!");
+			System.out.println(
+					"\nA Conta número " +
+					conta.getNumero() +
+					" não foi encontrada!");
 		}
 	}
 
@@ -68,7 +79,30 @@ public class ContaController implements ContaRepository {
 
 			listaContas.remove(conta);
 
-			System.out.println("\nA Conta número " + numero + " foi apagada com sucesso!");
+			System.out.println(
+					"\nA Conta número " +
+					numero +
+					" foi apagada com sucesso!");
+
+		} else {
+
+			System.out.println(
+					"\nA Conta número " +
+					numero +
+					" não foi encontrada!");
+		}
+	}
+
+	@Override
+	public void sacar(int numero, float valor) {
+
+		Conta conta = buscarNaCollection(numero);
+
+		if (conta != null) {
+
+			if (conta.sacar(valor)) {
+				System.out.println("\nSaque realizado com sucesso!");
+			}
 
 		} else {
 
@@ -76,7 +110,47 @@ public class ContaController implements ContaRepository {
 		}
 	}
 
-	
+	@Override
+	public void depositar(int numero, float valor) {
+
+		Conta conta = buscarNaCollection(numero);
+
+		if (conta != null) {
+
+			conta.depositar(valor);
+
+			System.out.println("\nDepósito realizado com sucesso!");
+
+		} else {
+
+			System.out.println("\nA Conta número " + numero + " não foi encontrada!");
+		}
+	}
+
+	@Override
+	public void transferir(int numeroOrigem, int numeroDestino, float valor) {
+
+		Conta contaOrigem = buscarNaCollection(numeroOrigem);
+		Conta contaDestino = buscarNaCollection(numeroDestino);
+
+		if (contaOrigem != null && contaDestino != null) {
+
+			if (contaOrigem.sacar(valor)) {
+
+				contaDestino.depositar(valor);
+
+				System.out.println("\nTransferência realizada com sucesso!");
+			}
+
+		} else {
+
+			System.out.println("\nUma ou ambas as contas não foram encontradas!");
+		}
+	}
+
+	/*
+	 * Método Auxiliar
+	 */
 	public Conta buscarNaCollection(int numero) {
 
 		for (Conta conta : listaContas) {
